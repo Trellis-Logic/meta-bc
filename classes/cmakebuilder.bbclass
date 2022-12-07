@@ -1,7 +1,7 @@
 # Path to the CMake file to process.
 OECMAKE_SOURCEPATH ??= "${S}"
 
-DEPENDS_prepend = "cmake-native "
+DEPENDS:prepend = "cmake-native "
 B = "${WORKDIR}/build"
 
 # We need to unset CCACHE otherwise cmake gets too confused
@@ -46,10 +46,10 @@ OECMAKE_EXTRA_ROOT_PATH ?= ""
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "ONLY"
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM_class-native = "BOTH"
 
-EXTRA_OECMAKE_append = " ${PACKAGECONFIG_CONFARGS}"
+EXTRA_OECMAKE:append = " ${PACKAGECONFIG_CONFARGS}"
 
-EXTRA_OECMAKE_BUILD_prepend_task-compile = "${PARALLEL_MAKE} "
-EXTRA_OECMAKE_BUILD_prepend_task-install = "${PARALLEL_MAKEINST} "
+EXTRA_OECMAKE_BUILD:prepend:task-compile = "${PARALLEL_MAKE} "
+EXTRA_OECMAKE_BUILD:prepend:task-install = "${PARALLEL_MAKEINST} "
 
 OECMAKE_TARGET_COMPILE ?= "all"
 OECMAKE_TARGET_INSTALL ?= "install"
@@ -120,7 +120,7 @@ CONFIGURE_FILES = "CMakeLists.txt"
 
 cmakebuilder_do_configure() {
 	if [ "${OECMAKE_BUILDPATH}" ]; then
-		bbnote "cmake.bbclass no longer uses OECMAKE_BUILDPATH.  The default behaviour is now out-of-tree builds with B=WORKDIR/build."
+		bbnote "cmakebuilder.bbclass no longer uses OECMAKE_BUILDPATH.  The default behaviour is now out-of-tree builds with B=WORKDIR/build."
 	fi
 	if [ "${S}" != "${B}" ]; then
 		rm -rf ${B}

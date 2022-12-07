@@ -1,7 +1,7 @@
 DESCRIPTION = "WIP LINPHONE-SDK Audio/video SIP-based IP phone (console edition)"
 HOMEPAGE = "http://www.linphone.org/technical-corner/linphone/overview"
 SECTION = "network"
-SECTION_linphonec =  "console/network"
+SECTION:linphonec =  "console/network"
 
 INC_PR = "r0"
 
@@ -9,7 +9,7 @@ DEPENDS = "git-native doxygen-native mariadb pulseaudio alsa-lib virtual/gettext
 
 PROVIDES = "linphone-sdk"
 
-RPROVIDES_${PN} = "bcunit bctoolbox belle-sip belr belcard \
+RPROVIDES:${PN} = "bcunit bctoolbox belle-sip belr belcard \
       ortp mediastreamer2 bcg729 bzrtp lime \
       mswebrtc speex speexdsp \
       liblinphone linphonec"
@@ -96,14 +96,14 @@ TARGET_CC_ARCH += "${LDFLAGS}"
 
 PACKAGES = "${PN} ${PN}-dev ${PN}-dbg"
 
-FILES_${PN} += "${INSTALL_PATH}/bin/*"
-FILES_${PN} += "${INSTALL_PATH}/lib/*"
-FILES_${PN} += "${INSTALL_PATH}/share/*"
-FILES_${PN}-dev = "${INSTALL_PATH}/include/*"
+FILES:${PN} += "${INSTALL_PATH}/bin/*"
+FILES:${PN} += "${INSTALL_PATH}/lib/*"
+FILES:${PN} += "${INSTALL_PATH}/share/*"
+FILES:${PN}-dev = "${INSTALL_PATH}/include/*"
 
 SYSROOT_DIRS += "/opt"
 
-do_install_append () {
+do_install:append () {
   #Do not include generated and installed cmake/pkgconfig files to the target package
   rm -rf "${BUILD_INSTALL_PATH}/cmake"
   rm -rf "${BUILD_INSTALL_PATH}/lib/pkgconfig"
@@ -116,4 +116,4 @@ do_install_append () {
 }
 
 #Allow non-symlink .so files and static libraries in ${PN} package
-INSANE_SKIP_${PN} += "dev-so staticdev already-stripped"
+INSANE_SKIP:${PN} += "dev-so staticdev already-stripped"
