@@ -1,5 +1,5 @@
 DESCRIPTION = "Linphone version of sofia-sip"
-LICENSE = "LGPLv2.1"
+LICENSE = "LGPL-2.1-only"
 HOMEPAGE = "http://sofia-sip.sourceforge.net/"
 SECTION = "libs/network"
 
@@ -14,7 +14,7 @@ S = "${WORKDIR}/git"
 
 PACKAGES += " ${PN}-common"
 
-FILES_${PN}-common = "${datadir}/sofia-sip/tag_dll.awk ${datadir}/sofia-sip/msg_parser.awk"
+FILES:${PN}-common = "${datadir}/sofia-sip/tag_dll.awk ${datadir}/sofia-sip/msg_parser.awk"
 
 inherit autotools pkgconfig
 

@@ -1,5 +1,5 @@
 DESCRIPTION = "General purpose SIP proxy with media capabilities from Belledonne Communications"
-LICENSE = "AGPLv3"
+LICENSE = "AGPL-3.0-only"
 HOMEPAGE = "http://www.linphone.org/technical-corner/flexisip/overview"
 SECTION = "comm"
 
@@ -8,15 +8,16 @@ INC_PR = "r0"
 PROVIDES = "flexisip flexisip-proxy flexisip-presence flexisip-conference"
 
 DEPENDS = "libsofia-sip-ua-bc linphone-sdk mariadb redis"
-RDEPENDS_${PN} = "lsb"
+
 S = "${WORKDIR}/git"
 
 inherit cmake systemd
 
-PACKAGECONFIG ??= "presence conference"
-PACKAGECONFIG[presence] = "-DENABLE_PRESENCE=ON,-DENABLE_PRESENCE=NO"
-PACKAGECONFIG[conference] = "-DENABLE_CONFERENCE=ON,-DENABLE_CONFERENCE=NO"
-PACKAGECONFIG[mdns]= "-DENABLE_MDNS=YES,-DENABLE_MDNS=NO,libbellesip"
+#PACKAGECONFIG ??= "presence conference"
+PACKAGECONFIG ??= "conference"
+PACKAGECONFIG[presence] = "-DENABLE_PRESENCE=YES, -DENABLE_PRESENCE=NO"
+PACKAGECONFIG[conference] = "-DENABLE_CONFERENCE=YES, -DENABLE_CONFERENCE=NO"
+PACKAGECONFIG[mdns]= "-DENABLE_MDNS=YES, -DENABLE_MDNS=NO, libbellesip"
 
 BUILD_INSTALL_PREFIX = "${WORKDIR}/git"
 
@@ -32,7 +33,7 @@ EXTRA_OECMAKE += " -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake"
 EXTRA_OECMAKE += " -DCMAKE_PREFIX_PATH=${STAGING_DIR_HOST}/${OECMAKE_EXTRA_ROOT_PATH}"
 
 EXTRA_OECMAKE += " -DCMAKE_INSTALL_DATAROOTDIR=share -DCMAKE_INSTALL_LIBDIR=lib"
-EXTRA_OECMAKE += "  	-DENABLE_REDIS=NO \
+EXTRA_OECMAKE += " -DENABLE_REDIS=NO \
 			-DENABLE_PROTOBUF=NO \
 			-DENABLE_TRANSCODER=YES \
 			-DENABLE_SNMP=NO \
@@ -50,15 +51,15 @@ EXTRA_OECMAKE += " -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR}"
 
 PACKAGES = "${PN} ${PN}-dev ${PN}-dbg"
 
-FILES_${PN} += "${INSTALL_PATH}/lib/*.so"
-FILES_${PN} += "${INSTALL_PATH}/bin/flexisip"
-FILES_${PN} += "${INSTALL_PATH}/bin/flexisip_tester"
-FILES_${PN} += "${INSTALL_PATH}/share/*"
-FILES_${PN} += "/lib/systemd/system/"
+FILES:${PN} += "${INSTALL_PATH}/lib/*.so"
+FILES:${PN} += "${INSTALL_PATH}/bin/flexisip"
+FILES:${PN} += "${INSTALL_PATH}/bin/flexisip_tester"
+FILES:${PN} += "${INSTALL_PATH}/share/*"
+FILES:${PN} += "/lib/systemd/system/"
 
-FILES_${PN}-dev = "${INSTALL_PATH}/bin/flexisip_pusher"
-FILES_${PN}-dev += "${INSTALL_PATH}/bin/flexisip_serializer"
-FILES_${PN}-dev += "${INSTALL_PATH}/include/*"
+FILES:${PN}-dev = "${INSTALL_PATH}/bin/flexisip_pusher"
+FILES:${PN}-dev += "${INSTALL_PATH}/bin/flexisip_serializer"
+FILES:${PN}-dev += "${INSTALL_PATH}/include/*"
 
 SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "flexisip-proxy.service flexisip-proxy@.service flexisip-conference.service flexisip-conference@.service flexisip-presence.service flexisip-presence@.service"
+SYSTEMD_SERVICE:${PN} = "flexisip-proxy.service flexisip-proxy@.service flexisip-conference.service flexisip-conference@.service flexisip-presence.service flexisip-presence@.service"
