@@ -6,17 +6,18 @@ SECTION:linphonec =  "console/network"
 INC_PR = "r0"
 
 DEPENDS = "\
-    git-native doxygen-native mariadb pulseaudio alsa-lib virtual/gettext sqlite3 mariadb \
-    zlib perl-native python3-native python3-pystache-native python3-six-native \
-    ${VERSION_DEPENDENT_DEPENDS}\
+    doxygen-native git-native perl-native python3-native python3-pystache-native python3-six-native \
+    alsa-lib virtual/gettext jsoncpp libjpeg-turbo libsrtp mariadb mbedtls pulseaudio speex speexdsp \
+    xerces-c \
+    ${VERSION_DEPENDENT_DEPENDS} \
     "
 
 PROVIDES = "linphone-sdk"
 
-RPROVIDES:${PN} = "bcunit bctoolbox belle-sip belr belcard \
-      ortp mediastreamer2 bcg729 bzrtp lime \
-      mswebrtc speex speexdsp \
-      liblinphone linphonec"
+RPROVIDES:${PN} = "\
+    bcunit bcg729 bctoolbox belle-sip belr belcard bzrtp liblinphone linphonec lime ortp \
+    mediastreamer2 mswebrtc \
+    "
 
 S = "${WORKDIR}/git"
 
@@ -46,8 +47,8 @@ python () {
 SRC_URI = "gitsm://gitlab.linphone.org/BC/public/linphone-sdk.git;protocol=https;branch=${LINPHONE_SDK_BRANCH};"
 
 python () {
-    bb.note("LINPHONE_SDK_LIC_FILES_CHKSUM=" + os.getenv("LINPHONE_SDK_LIC_FILES_CHKSUM", ''))
     if os.getenv("LINPHONE_SDK_LIC_FILES_CHKSUM", '') != '':
+      bb.note("LINPHONE_SDK_LIC_FILES_CHKSUM=" + os.getenv("LINPHONE_SDK_LIC_FILES_CHKSUM", ''))
       d.setVar("LIC_FILES_CHKSUM_ENV", os.getenv("LINPHONE_SDK_LIC_FILES_CHKSUM"))
     else:
       d.setVar("LIC_FILES_CHKSUM_ENV", "ff3103b5db8ba4e2c66c511b7a73e407")
@@ -55,15 +56,19 @@ python () {
 #Bitbakes throws parse errors when we try to set license dynamically, so we only set LIC_FILES_CHKSUM (check .bb files to see which values to set)
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=${LIC_FILES_CHKSUM_ENV}"
 
-PACKAGECONFIG ??= "sqlite zlib bzrtp ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'video', '', d)}"
-PACKAGECONFIG[sqlite] = "-DENABLE_SQLITE_STORAGE=yes, -DENABLE_SQLITE_STORAGE=no"
-PACKAGECONFIG[zlib] = ", --disable-zlib, zlib"
-PACKAGECONFIG[video]= "-DENABLE_X11=YES -DENABLE_XV=YES -DENABLE_GLX=ON -DENABLE_GL=NO,-DENABLE_VIDEO=NO,libv4l libxv virtual/libgl glew"
-PACKAGECONFIG[bzrtp]= " -DENABLE_BZRTP=YES, -DENABLE_BZRTP=NO"
-PACKAGECONFIG[mdns]= "-DENABLE_MDNS=YES,-DENABLE_MDNS=NO"
+PACKAGECONFIG ??= "bzrtp opus sqlite vpx zlib ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'video', '', d)}"
+PACKAGECONFIG[sqlite] = "-DENABLE_SQLITE_STORAGE=YES -DENABLE_SQLITE=YES, -DENABLE_SQLITE_STORAGE=NO -DENABLE_SQLITE=NO, sqlite3"
+PACKAGECONFIG[zlib] = "-DENABLE_ZLIB=YES, -DENABLE_ZLIB=NO, zlib"
+PACKAGECONFIG[bzrtp] = " -DENABLE_BZRTP=YES, -DENABLE_BZRTP=NO"
+PACKAGECONFIG[mdns] = "-DENABLE_MDNS=YES, -DENABLE_MDNS=NO, avahi"
+PACKAGECONFIG[h264] = "-DENABLE_NON_FREE_CODECS=YES -DENABLE_OPENH264=YES, -DENABLE_OPENH264=NO, openh264 nasm-native"
+PACKAGECONFIG[opus] = "-DENABLE_OPUS=YES, -DENABLE_OPUS=NO, libopus" 
+PACKAGECONFIG[video] = "-DENABLE_X11=YES -DENABLE_XV=YES -DENABLE_GLX=YES -DENABLE_GL=NO, -DENABLE_VIDEO=NO, libv4l libxv virtual/libgl glew"
+PACKAGECONFIG[vpx] = "-DENABLE_VPX=YES, -DENABLE_VPX=NO, libvpx yasm-native"
 
 EXTRA_OECMAKE ??= " "
-EXTRA_OECMAKE += " -DENABLE_CONSOLE_UI=NO -DENABLE_GTK_UI=NO -DENABLE_CXX_WRAPPER=YES -DENABLE_VCARD=YES -DENABLE_VPX=NO -DENABLE_XML2=NO -DENABLE_SQLITE=NO -DENABLE_ZLIB=NO -DENABLE_SOCI_MYSQL=YES -DENABLE_LDAP=NO"
+EXTRA_OECMAKE += " -DLINPHONESDK_PLATFORM=Yocto"
+EXTRA_OECMAKE += " -DENABLE_CONSOLE_UI=NO -DENABLE_GTK_UI=NO -DENABLE_CXX_WRAPPER=YES -DENABLE_VCARD=YES -DENABLE_XML2=NO -DENABLE_SOCI_MYSQL=YES -DENABLE_LDAP=NO"
 
 EXTRA_OECMAKE += " -DENABLE_UNIT_TESTS=YES -DENABLE_TESTS=YES"
 
