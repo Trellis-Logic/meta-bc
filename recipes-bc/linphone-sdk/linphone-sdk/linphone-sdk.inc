@@ -51,7 +51,7 @@ python () {
       bb.note("LINPHONE_SDK_LIC_FILES_CHKSUM=" + os.getenv("LINPHONE_SDK_LIC_FILES_CHKSUM", ''))
       d.setVar("LIC_FILES_CHKSUM_ENV", os.getenv("LINPHONE_SDK_LIC_FILES_CHKSUM"))
     else:
-      d.setVar("LIC_FILES_CHKSUM_ENV", "ff3103b5db8ba4e2c66c511b7a73e407")
+      d.setVar("LIC_FILES_CHKSUM_ENV", "eb1e647870add0502f8f010b19de32af")
 }
 #Bitbakes throws parse errors when we try to set license dynamically, so we only set LIC_FILES_CHKSUM (check .bb files to see which values to set)
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=${LIC_FILES_CHKSUM_ENV}"
