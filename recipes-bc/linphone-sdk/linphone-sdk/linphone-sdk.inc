@@ -9,6 +9,7 @@ DEPENDS = "\
     doxygen-native git-native perl-native python3-native python3-pystache-native python3-six-native \
     alsa-lib virtual/gettext jsoncpp libjpeg-turbo libsrtp mariadb mbedtls pulseaudio speex speexdsp \
     xerces-c \
+    gsm \
     ${VERSION_DEPENDENT_DEPENDS} \
     "
 
@@ -63,7 +64,7 @@ PACKAGECONFIG[bzrtp] = " -DENABLE_BZRTP=YES, -DENABLE_BZRTP=NO"
 PACKAGECONFIG[mdns] = "-DENABLE_MDNS=YES, -DENABLE_MDNS=NO, avahi"
 PACKAGECONFIG[h264] = "-DENABLE_NON_FREE_CODECS=YES -DENABLE_OPENH264=YES, -DENABLE_OPENH264=NO, openh264 nasm-native"
 PACKAGECONFIG[opus] = "-DENABLE_OPUS=YES, -DENABLE_OPUS=NO, libopus" 
-PACKAGECONFIG[video] = "-DENABLE_X11=YES -DENABLE_XV=YES -DENABLE_GLX=YES -DENABLE_GL=NO, -DENABLE_VIDEO=NO, libv4l libxv virtual/libgl glew"
+PACKAGECONFIG[video] = "-DENABLE_X11=YES -DENABLE_XV=YES -DENABLE_GLX=YES -DENABLE_GL=NO, -DENABLE_VIDEO=NO, libv4l libxv virtual/libgl glew libyuv"
 PACKAGECONFIG[vpx] = "-DENABLE_VPX=YES, -DENABLE_VPX=NO, libvpx yasm-native"
 
 EXTRA_OECMAKE ??= " "
