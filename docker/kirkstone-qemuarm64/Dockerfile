@@ -1,7 +1,7 @@
 FROM debian:11
 
 ARG YOCTO_VERSION=kirkstone
-ARG BITBAKE_TARGET=core-image-base
+ARG BITBAKE_TARGET=core-image-sato
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -17,8 +17,8 @@ RUN apt-get install -y gawk wget git diffstat unzip texinfo gcc build-essential 
 # Additional host packages needed for build
 RUN apt-get install -y file
 
-# Additional host packages needed for qemu
-RUN apt-get install -y iproute2
+# Additional host packages needed for qemu and testimage
+RUN apt-get install -y iproute2 iptables procps sysstat
 
 # Additional host packages required by poky/scripts/wic
 RUN apt-get install -y curl dosfstools mtools parted syslinux tree zip

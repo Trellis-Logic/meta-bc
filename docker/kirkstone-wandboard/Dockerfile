@@ -1,7 +1,7 @@
 FROM debian:11
 
 ARG YOCTO_VERSION=kirkstone
-ARG BITBAKE_TARGET=core-image-base
+ARG BITBAKE_TARGET=core-image-sato
 
 ENV DEBIAN_FRONTEND noninteractive
 
