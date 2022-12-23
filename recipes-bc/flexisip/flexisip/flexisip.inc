@@ -7,7 +7,7 @@ INC_PR = "r0"
 
 PROVIDES = "flexisip flexisip-proxy flexisip-presence flexisip-conference"
 
-DEPENDS = "libsofia-sip-ua-bc linphone-sdk mariadb redis"
+DEPENDS = "libsofia-sip-ua-bc mariadb redis"
 
 S = "${WORKDIR}/git"
 
