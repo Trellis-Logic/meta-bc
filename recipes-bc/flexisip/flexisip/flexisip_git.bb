@@ -18,7 +18,7 @@ python () {
     print(d.getVar('SRCREV', True))
 }
 
-SRC_URI = "git://gitlab.linphone.org/BC/public/flexisip.git;protocol=https;branch=yocto_sumo"
+SRC_URI = "gitsm://gitlab.linphone.org/BC/public/flexisip.git;protocol=https;branch=master"
 
 PV = "git_${SRCREV}"
 PKGV = "${GITPKGVTAG}"
