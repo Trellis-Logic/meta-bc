@@ -7,9 +7,8 @@ INC_PR = "r0"
 
 DEPENDS = "\
     doxygen-native git-native perl-native python3-native python3-pystache-native python3-six-native \
-    alsa-lib virtual/gettext jsoncpp libjpeg-turbo libsrtp mariadb mbedtls pulseaudio speex speexdsp \
-    xerces-c \
-    gsm \
+    alsa-lib virtual/gettext gsm jsoncpp libjpeg-turbo libsrtp libxml2 mariadb mbedtls pulseaudio speex \
+    speexdsp xerces-c \
     ${VERSION_DEPENDENT_DEPENDS} \
     "
 
@@ -69,7 +68,7 @@ PACKAGECONFIG[vpx] = "-DENABLE_VPX=YES, -DENABLE_VPX=NO, libvpx yasm-native"
 
 EXTRA_OECMAKE ??= " "
 EXTRA_OECMAKE += " -DLINPHONESDK_PLATFORM=Yocto"
-EXTRA_OECMAKE += " -DENABLE_CONSOLE_UI=NO -DENABLE_GTK_UI=NO -DENABLE_CXX_WRAPPER=YES -DENABLE_VCARD=YES -DENABLE_XML2=NO -DENABLE_SOCI_MYSQL=YES -DENABLE_LDAP=NO"
+EXTRA_OECMAKE += " -DENABLE_CONSOLE_UI=NO -DENABLE_GTK_UI=NO -DENABLE_CXX_WRAPPER=YES -DENABLE_VCARD=YES -DENABLE_XML2=YES -DENABLE_SOCI_MYSQL=YES -DENABLE_LDAP=NO"
 
 EXTRA_OECMAKE += " -DENABLE_UNIT_TESTS=YES -DENABLE_TESTS=YES"
 
