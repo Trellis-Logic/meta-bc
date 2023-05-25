@@ -4,7 +4,7 @@ VERSION_DEPENDENT_INHERIT="python3native"
 
 # The default commit sha used if LINPHONE_SDK_REV is not set and LATEST_REVISIONS disabled
 # 5.2.0
-DEFAULT_COMMIT="e3e0612c4f22c3b74b1e5be94bed0e3cc251ca4c"
+DEFAULT_COMMIT="5688d2a90710da6501e4d4420ee9178d9538a363"
 
 require linphone-sdk.inc
 
