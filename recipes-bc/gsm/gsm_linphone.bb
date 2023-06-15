@@ -1,4 +1,6 @@
-SUMMARY = "libyuv is an open source project that includes YUV scaling and conversion functionality"
+# This recipe is only used for 5.2.x branch. On latest, gsm is built with the linphone SDK.
+
+SUMMARY = "gsm is an open source project that provides the GSM audio codec"
 
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=fc1372895b173aaf543a122db37e04f5"
@@ -17,3 +19,5 @@ inherit cmake
 
 EXTRA_OECMAKE = "-DENABLE_STATIC=ON"
 OECMAKE_C_FLAGS += " -fPIC"
+
+FILES:${PN} += "/usr/share/GSM/*"

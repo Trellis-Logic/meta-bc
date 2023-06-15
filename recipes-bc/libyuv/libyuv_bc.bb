@@ -1,3 +1,5 @@
+# This recipe is only used for 5.2.x branch. On latest, libyuv is built with the linphone SDK.
+
 SUMMARY = "libyuv is an open source project that includes YUV scaling and conversion functionality"
 
 LICENSE = "MIT"
@@ -17,3 +19,5 @@ python () {
 inherit cmake
 
 EXTRA_OECMAKE = "-DENABLE_STATIC=ON"
+
+FILES:${PN} += "/usr/share/YUV/*"

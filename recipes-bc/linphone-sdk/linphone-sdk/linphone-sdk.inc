@@ -6,9 +6,8 @@ SECTION:linphonec =  "console/network"
 INC_PR = "r0"
 
 DEPENDS = "\
-    doxygen-native git-native perl-native python3-native python3-pystache-native python3-six-native \
-    alsa-lib virtual/gettext gsm jsoncpp libjpeg-turbo libsrtp libxml2 mariadb mbedtls pulseaudio speex \
-    speexdsp xerces-c \
+    doxygen-native git-native python3-native python3-pystache-native python3-six-native \
+    alsa-lib libjpeg-turbo libsrtp libxml2 mariadb mbedtls pulseaudio speex speexdsp xerces-c \
     ${VERSION_DEPENDENT_DEPENDS} \
     "
 
@@ -21,7 +20,7 @@ RPROVIDES:${PN} = "\
 
 S = "${WORKDIR}/git"
 
-inherit cmakebuilder gettext pkgconfig chrpath perlnative ${VERSION_DEPENDENT_INHERIT}
+inherit cmakebuilder chrpath ${VERSION_DEPENDENT_INHERIT}
 
 python () {
 # 3 possible revisions:
@@ -53,28 +52,23 @@ python () {
     else:
       d.setVar("LIC_FILES_CHKSUM_ENV", "eb1e647870add0502f8f010b19de32af")
 }
-#Bitbakes throws parse errors when we try to set license dynamically, so we only set LIC_FILES_CHKSUM (check .bb files to see which values to set)
+# Bitbakes throws parse errors when we try to set license dynamically, so we only set LIC_FILES_CHKSUM (check .bb files to see which values to set)
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=${LIC_FILES_CHKSUM_ENV}"
 
-PACKAGECONFIG ??= "bzrtp opus sqlite vpx zlib ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'video', '', d)}"
-PACKAGECONFIG[sqlite] = "-DENABLE_SQLITE_STORAGE=YES -DENABLE_SQLITE=YES, -DENABLE_SQLITE_STORAGE=NO -DENABLE_SQLITE=NO, sqlite3"
-PACKAGECONFIG[zlib] = "-DENABLE_ZLIB=YES, -DENABLE_ZLIB=NO, zlib"
-PACKAGECONFIG[bzrtp] = " -DENABLE_BZRTP=YES, -DENABLE_BZRTP=NO"
-PACKAGECONFIG[mdns] = "-DENABLE_MDNS=YES, -DENABLE_MDNS=NO, avahi"
-PACKAGECONFIG[h264] = "-DENABLE_NON_FREE_CODECS=YES -DENABLE_OPENH264=YES, -DENABLE_OPENH264=NO, openh264 nasm-native"
-PACKAGECONFIG[opus] = "-DENABLE_OPUS=YES, -DENABLE_OPUS=NO, libopus" 
-PACKAGECONFIG[video] = "-DENABLE_X11=YES -DENABLE_XV=YES -DENABLE_GLX=YES -DENABLE_GL=NO, -DENABLE_VIDEO=NO, libv4l libxv virtual/libgl glew libyuv"
-PACKAGECONFIG[vpx] = "-DENABLE_VPX=YES, -DENABLE_VPX=NO, libvpx yasm-native"
+PACKAGECONFIG ??= "bzrtp opus sqlite vpx yuv zlib ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'video', '', d)}"
+PACKAGECONFIG[bzrtp] = " -DENABLE_BZRTP=ON, -DENABLE_BZRTP=OFF"
+PACKAGECONFIG[h264] = "-DENABLE_NON_FREE_CODECS=ON -DENABLE_OPENH264=ON, -DENABLE_OPENH264=OFF, openh264 nasm-native"
+PACKAGECONFIG[mdns] = "-DENABLE_MDNS=ON, -DENABLE_MDNS=OFF, avahi"
+PACKAGECONFIG[video] = "-DENABLE_VIDEO=ON -DENABLE_X11=ON -DENABLE_XV=ON -DENABLE_GLX=ON -DENABLE_GL=OFF, -DENABLE_VIDEO=OFF, libv4l libxv virtual/libgl glew"
 
 EXTRA_OECMAKE ??= " "
-EXTRA_OECMAKE += " -DLINPHONESDK_PLATFORM=Yocto"
-EXTRA_OECMAKE += " -DENABLE_CONSOLE_UI=NO -DENABLE_GTK_UI=NO -DENABLE_CXX_WRAPPER=YES -DENABLE_VCARD=YES -DENABLE_XML2=YES -DENABLE_SOCI_MYSQL=YES -DENABLE_LDAP=NO"
+EXTRA_OECMAKE:append = " -DLINPHONESDK_PLATFORM=Yocto"
+EXTRA_OECMAKE:append = " -DENABLE_CONSOLE_UI=OFF -DENABLE_CXX_WRAPPER=ON -DENABLE_VCARD=ON -DENABLE_XML2=ON -DENABLE_SOCI_MYSQL=ON"
+EXTRA_OECMAKE:append = " -DENABLE_UNIT_TESTS=ON"
 
-EXTRA_OECMAKE += " -DENABLE_UNIT_TESTS=YES -DENABLE_TESTS=YES"
-
-#Force cmake cross-compiling
-EXTRA_OECMAKE += " -DCMAKE_CROSSCOMPILING=YES"
-EXTRA_OECMAKE += " -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake"
+# Force cmake cross-compiling
+EXTRA_OECMAKE:append = " -DCMAKE_CROSSCOMPILING=ON"
+EXTRA_OECMAKE:append = " -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake"
 
 BUILD_INSTALL_PREFIX = "${WORKDIR}/git/linphone-sdk/desktop"
 
@@ -82,25 +76,27 @@ INSTALL_PATH = "/opt/belledonne-communications"
 
 BUILD_INSTALL_PATH = "${BUILD_INSTALL_PREFIX}${INSTALL_PATH}"
 
-#Used by cmake.bbclass to add the temporary target directory as root for find_package, required to find correct libraries directories
+# Used by cmake.bbclass to add the temporary target directory as root for find_package, required to find correct libraries directories
 OECMAKE_EXTRA_ROOT_PATH = "${BUILD_INSTALL_PATH}"
 
-EXTRA_OECMAKE += " -DCMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR}"
-EXTRA_OECMAKE += " -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR}"
+OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
-#The actual target installation prefix when cross-compiling
-EXTRA_OECMAKE += " -DCMAKE_STAGING_PREFIX=${BUILD_INSTALL_PATH}"
-EXTRA_OECMAKE += " -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH}"
+EXTRA_OECMAKE:append = " -DCMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR}"
+EXTRA_OECMAKE:append = " -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR}"
 
-EXTRA_OECMAKE += " -DCMAKE_SKIP_RPATH=YES"
+# The actual target installation prefix when cross-compiling
+EXTRA_OECMAKE:append = " -DCMAKE_STAGING_PREFIX=${BUILD_INSTALL_PATH}"
+EXTRA_OECMAKE:append = " -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH}"
 
-EXTRA_OECMAKE += " -DCMAKE_EXE_LINKER_FLAGS='-Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib -Wl,-rpath=${INSTALL_PATH}/lib'"
-EXTRA_OECMAKE += " -DCMAKE_SHARED_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib -Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib'"
-EXTRA_OECMAKE += " -DCMAKE_MODULE_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib -Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib'"
+EXTRA_OECMAKE:append = " -DCMAKE_SKIP_RPATH=ON"
 
-#Apply default linker flags provided by Yocto.
-#This avoids 'No GNU_HASH in the elf binary' error as documented
-#in https://www.yoctoproject.org/docs/2.0.1/ref-manual/ref-manual.html#qa-issue-ldflags .
+EXTRA_OECMAKE:append = " -DCMAKE_EXE_LINKER_FLAGS='-Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib -Wl,-rpath=${INSTALL_PATH}/lib'"
+EXTRA_OECMAKE:append = " -DCMAKE_SHARED_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib -Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib'"
+EXTRA_OECMAKE:append = " -DCMAKE_MODULE_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib -Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib'"
+
+# Apply default linker flags provided by Yocto.
+# This avoids 'No GNU_HASH in the elf binary' error as documented
+# in https://www.yoctoproject.org/docs/2.0.1/ref-manual/ref-manual.html#qa-issue-ldflags .
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 PACKAGES = "${PN} ${PN}-dev ${PN}-dbg"
@@ -112,17 +108,5 @@ FILES:${PN}-dev = "${INSTALL_PATH}/include/*"
 
 SYSROOT_DIRS += "/opt"
 
-do_install:append () {
-  #Do not include generated and installed cmake/pkgconfig files to the target package
-  rm -rf "${BUILD_INSTALL_PATH}/cmake"
-  rm -rf "${BUILD_INSTALL_PATH}/lib/pkgconfig"
-
-  install -m 0755 -d ${D}${INSTALL_PATH}/bin ${D}${INSTALL_PATH}/lib ${D}${INSTALL_PATH}/include ${D}${INSTALL_PATH}/share
-  cp -r ${BUILD_INSTALL_PATH}/bin/* ${D}${INSTALL_PATH}/bin
-  cp -r ${BUILD_INSTALL_PATH}/lib/* ${D}${INSTALL_PATH}/lib
-  cp -r ${BUILD_INSTALL_PATH}/share/* ${D}${INSTALL_PATH}/share
-  cp -r ${BUILD_INSTALL_PATH}/include/* ${D}${INSTALL_PATH}/include
-}
-
-#Allow non-symlink .so files and static libraries in ${PN} package
+# Allow non-symlink .so files and static libraries in ${PN} package
 INSANE_SKIP:${PN} += "dev-so staticdev already-stripped"
