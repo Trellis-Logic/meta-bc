@@ -3,8 +3,8 @@ VERSION_DEPENDENT_DEPENDS="perl-native virtual/gettext gsm jsoncpp"
 VERSION_DEPENDENT_INHERIT="python3native"
 
 # The default commit sha used if LINPHONE_SDK_REV is not set and LATEST_REVISIONS disabled
-# 5.2.0
-DEFAULT_COMMIT="5688d2a90710da6501e4d4420ee9178d9538a363"
+# 5.2.73
+DEFAULT_COMMIT="820367237bd1291301ebfdee6c698db65e3eeacc"
 
 inherit gettext pkgconfig perlnative 
 
