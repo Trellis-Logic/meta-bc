@@ -7,7 +7,7 @@ INC_PR = "r0"
 
 DEPENDS = "\
     doxygen-native git-native python3-native python3-pystache-native python3-six-native \
-    alsa-lib libjpeg-turbo libsrtp libxml2 mariadb mbedtls pulseaudio speex speexdsp xerces-c \
+    alsa-lib libsrtp libxml2 mariadb mbedtls pulseaudio speex speexdsp xerces-c \
     ${VERSION_DEPENDENT_DEPENDS} \
     "
 
@@ -55,15 +55,15 @@ python () {
 # Bitbakes throws parse errors when we try to set license dynamically, so we only set LIC_FILES_CHKSUM (check .bb files to see which values to set)
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=${LIC_FILES_CHKSUM_ENV}"
 
-PACKAGECONFIG ??= "bzrtp opus sqlite vpx yuv zlib ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'video', '', d)}"
+PACKAGECONFIG ??= "bzrtp opus sqlite tests vpx yuv zlib ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'video', '', d)}"
 PACKAGECONFIG[bzrtp] = " -DENABLE_BZRTP=ON, -DENABLE_BZRTP=OFF"
 PACKAGECONFIG[mdns] = "-DENABLE_MDNS=ON, -DENABLE_MDNS=OFF, avahi"
+PACKAGECONFIG[tests] = "-DENABLE_UNIT_TESTS=ON, -DENABLE_UNIT_TESTS=OFF"
 PACKAGECONFIG[video] = "-DENABLE_VIDEO=ON -DENABLE_X11=ON -DENABLE_XV=ON -DENABLE_GLX=ON -DENABLE_GL=OFF, -DENABLE_VIDEO=OFF, libv4l libxv virtual/libgl glew"
 
 EXTRA_OECMAKE ??= " "
 EXTRA_OECMAKE:append = " -DLINPHONESDK_PLATFORM=Yocto"
 EXTRA_OECMAKE:append = " -DENABLE_CONSOLE_UI=OFF -DENABLE_CXX_WRAPPER=ON -DENABLE_VCARD=ON -DENABLE_XML2=ON -DENABLE_SOCI_MYSQL=ON"
-EXTRA_OECMAKE:append = " -DENABLE_UNIT_TESTS=ON"
 
 # Force cmake cross-compiling
 EXTRA_OECMAKE:append = " -DCMAKE_CROSSCOMPILING=ON"

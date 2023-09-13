@@ -1,5 +1,5 @@
 # Used on the release 5.2 branch, for the last stable version please use the "latest" recipe
-VERSION_DEPENDENT_DEPENDS="perl-native virtual/gettext gsm jsoncpp"
+VERSION_DEPENDENT_DEPENDS="perl-native virtual/gettext gsm jsoncpp libjpeg-turbo"
 VERSION_DEPENDENT_INHERIT="python3native"
 
 # The default commit sha used if LINPHONE_SDK_REV is not set and LATEST_REVISIONS disabled
