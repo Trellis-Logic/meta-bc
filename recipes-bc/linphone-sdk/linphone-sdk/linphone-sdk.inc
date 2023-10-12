@@ -20,7 +20,7 @@ RPROVIDES:${PN} = "\
 
 S = "${WORKDIR}/git"
 
-inherit cmakebuilder chrpath ${VERSION_DEPENDENT_INHERIT}
+inherit chrpath ${VERSION_DEPENDENT_INHERIT}
 
 python () {
 # 3 possible revisions:
@@ -69,14 +69,7 @@ EXTRA_OECMAKE:append = " -DENABLE_CONSOLE_UI=OFF -DENABLE_CXX_WRAPPER=ON -DENABL
 EXTRA_OECMAKE:append = " -DCMAKE_CROSSCOMPILING=ON"
 EXTRA_OECMAKE:append = " -DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain.cmake"
 
-BUILD_INSTALL_PREFIX = "${WORKDIR}/git/linphone-sdk/desktop"
-
 INSTALL_PATH = "/opt/belledonne-communications"
-
-BUILD_INSTALL_PATH = "${BUILD_INSTALL_PREFIX}${INSTALL_PATH}"
-
-# Used by cmake.bbclass to add the temporary target directory as root for find_package, required to find correct libraries directories
-OECMAKE_EXTRA_ROOT_PATH = "${BUILD_INSTALL_PATH}"
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
 
@@ -84,14 +77,10 @@ EXTRA_OECMAKE:append = " -DCMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR
 EXTRA_OECMAKE:append = " -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES=${STAGING_INCDIR}"
 
 # The actual target installation prefix when cross-compiling
-EXTRA_OECMAKE:append = " -DCMAKE_STAGING_PREFIX=${BUILD_INSTALL_PATH}"
 EXTRA_OECMAKE:append = " -DCMAKE_INSTALL_PREFIX=${INSTALL_PATH}"
 
 EXTRA_OECMAKE:append = " -DCMAKE_SKIP_RPATH=ON"
 
-EXTRA_OECMAKE:append = " -DCMAKE_EXE_LINKER_FLAGS='-Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib -Wl,-rpath=${INSTALL_PATH}/lib'"
-EXTRA_OECMAKE:append = " -DCMAKE_SHARED_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib -Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib'"
-EXTRA_OECMAKE:append = " -DCMAKE_MODULE_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib -Wl,-rpath-link=${BUILD_INSTALL_PATH}/lib'"
 
 # Apply default linker flags provided by Yocto.
 # This avoids 'No GNU_HASH in the elf binary' error as documented
