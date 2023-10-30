@@ -3,7 +3,7 @@ VERSION_DEPENDENT_DEPENDS=""
 VERSION_DEPENDENT_INHERIT="python3native"
 
 # The default commit sha used if LINPHONE_SDK_REV is not set and LATEST_REVISIONS disabled
-DEFAULT_COMMIT="c42f2aef977fc9552c7736491882a1cd85de238c"
+DEFAULT_COMMIT="14574a0b0c531687a5af0dd074e0cc5cb07c67f1"
 
 inherit cmake
 
