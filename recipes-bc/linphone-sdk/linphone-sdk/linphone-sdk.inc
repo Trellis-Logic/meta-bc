@@ -7,7 +7,7 @@ INC_PR = "r0"
 
 DEPENDS = "\
     doxygen-native git-native python3-native python3-pystache-native python3-six-native \
-    alsa-lib libsrtp libxml2 mariadb mbedtls pulseaudio speex speexdsp xerces-c \
+    alsa-lib libsrtp libxml2 mariadb pulseaudio speex speexdsp xerces-c \
     ${VERSION_DEPENDENT_DEPENDS} \
     "
 
