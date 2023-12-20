@@ -1,0 +1,50 @@
+# This recipe must always evolve to work with the last stable linphone-sdk version.
+VERSION_DEPENDENT_DEPENDS="mbedtls"
+VERSION_DEPENDENT_INHERIT="python3native"
+
+# The default commit sha used if LINPHONE_SDK_REV is not set and LATEST_REVISIONS disabled
+DEFAULT_COMMIT="9bd7b11d47b09bcef967ef26885488cdb5b9f6f2"
+
+inherit cmake
+
+require linphone-sdk.inc
+
+PACKAGECONFIG:append = " ldap"
+PACKAGECONFIG[av1] = "-DENABLE_AV1=ON, -DENABLE_AV1=OFF"
+PACKAGECONFIG[h264] = "-DENABLE_NON_FREE_FEATURES=ON -DENABLE_OPENH264=ON -DBUILD_OPENH264=OFF, -DENABLE_OPENH264=OFF, openh264 nasm-native"
+PACKAGECONFIG[ldap] = "-DENABLE_LDAP=ON -DBUILD_OPENLDAP=ON, -DENABLE_LDAP=OFF"
+PACKAGECONFIG[opus] = "-DENABLE_OPUS=ON -DBUILD_OPUS=OFF, -DENABLE_OPUS=OFF, libopus"
+PACKAGECONFIG[sqlite] = "-DENABLE_DB_STORAGE=ON -DENABLE_SQLITE=ON -DBUILD_SQLITE3=OFF, -DENABLE_DB_STORAGE=OFF -DENABLE_SQLITE=OFF, sqlite3"
+PACKAGECONFIG[vpx] = "-DENABLE_VPX=ON -DBUILD_LIBVPX=OFF, -DENABLE_VPX=OFF, libvpx yasm-native"
+PACKAGECONFIG[yuv] = "-DENABLE_LIBYUV=ON -DBUILD_LIBYUV=ON -DBUILD_LIBYUV_SHARED_LIBS=OFF, -DENABLE_LIBYUV=OFF"
+PACKAGECONFIG[zlib] = "-DENABLE_ZLIB=ON -DBUILD_ZLIB=OFF, -DENABLE_ZLIB=OFF, zlib"
+
+EXTRA_OECMAKE:append = " \
+	-DBUILD_LIBJPEGTURBO_SHARED_LIBS=OFF \
+	-DBUILD_LIBSRTP2=OFF \
+	-DBUILD_LIBXML2=OFF \
+	-DBUILD_MBEDTLS=OFF \
+	-DBUILD_SPEEX=OFF \
+	-DBUILD_XERCESC=OFF \
+"
+
+EXTRA_OECMAKE:append = " -DCMAKE_EXE_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib'"
+EXTRA_OECMAKE:append = " -DCMAKE_SHARED_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib'"
+EXTRA_OECMAKE:append = " -DCMAKE_MODULE_LINKER_FLAGS='-Wl,-rpath=${INSTALL_PATH}/lib'"
+
+do_install:append () {
+  # Do not include generated and installed cmake/pkgconfig files to the target package
+  rm -rf "${D}${INSTALL_PATH}/cmake"
+  rm -rf "${D}${INSTALL_PATH}/lib/pkgconfig"
+}
+
+
+# AGPLv3 or later
+LICENSE = "AGPL-3.0-or-later"
+# LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=eb1e647870add0502f8f010b19de32af"
+
+inherit gitpkgv
+
+PR = "${INC_PR}.0"
+PV = "latest"
+PKGV = "${GITPKGVTAG}"
