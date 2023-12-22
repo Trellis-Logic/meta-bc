@@ -46,5 +46,5 @@ LICENSE = "AGPL-3.0-or-later"
 inherit gitpkgv
 
 PR = "${INC_PR}.0"
-PV = "latest"
+PV = "5.3.x"
 PKGV = "${GITPKGVTAG}"
